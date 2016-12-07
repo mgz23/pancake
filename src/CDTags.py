@@ -1,24 +1,52 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-
 import musicbrainzngs, discid
 
 musicbrainzngs.set_useragent("pancakerip", "0.01", "arturdwieszopy@gmail.com")
 
+class CDTags:
+    def __init__(self):
 
-disc_id = discid.read()
-full_data = musicbrainzngs.get_releases_by_discid(disc_id, includes=['artists', 'recordings', 'artist-credits'])['disc']['release-list'][0]
+        self.disc_info = {}
 
-artist = full_data['artist-credit'][0]['artist']['name']
-if artist == "Various Artists":
-    artist = {}
-    for i in full_data['medium-list'][0]['track-list']:
-        artist[i['number']] = i['artist-credit-phrase']
-album = full_data['title']
-year = full_data['date']
-total_tracks = full_data['medium-list'][0]['disc-list'][0]['offset-count']
-tracks = {}
+        self.disc_id = discid.read()
+        self.full_data = musicbrainzngs.get_releases_by_discid(self.disc_id, includes=['artists', 'recordings', 'artist-credits'])['disc']['release-list'][0]
 
-for i in full_data['medium-list'][0]['track-list']:
-    tracks[i['number']] = i['recording']['title']
+    def read(self):
+        self.disc_info['artist'] = self.full_data['artist-credit'][0]['artist']['name']
+        if self.disc_info['artist'] == "Various Artists":
+            self.disc_info['artist'] = {}
+            for i in self.full_data['medium-list'][0]['track-list']:
+                self.disc_info['artist'][i['number']] = i['artist-credit-phrase']
+        self.disc_info['year'] = self.full_data['date']
+        self.disc_info['title'] = self.full_data['title']
+        self.disc_info['total_tracks'] = self.full_data['medium-list'][0]['disc-list'][0]['offset-count']
+        self.disc_info['total_discs'] = self.full_data['medium-count']
+
+        self.disc_info['tracks'] = {}
+
+        if self.disc_info['total_discs'] > 1:
+
+            toc = []
+            for i in self.disc_id.toc_string.split(" ")[3:]:
+                toc.append(int(i))
+
+            for i in self.full_data['medium-list']:
+                if i ['disc-list'][0]['offset-list'] == toc:
+                    disc_data = i
+
+            for i in disc_data['track-list']:
+                self.disc_info['tracks'][i['number']] = i['recording']['title']
+
+            self.disc_info['disc_number'] = disc_data['position']
+            self.disc_info['disc_title'] = disc_data['title']
+            self.disc_info['total_tracks'] = disc_data['disc-list'][0]['offset-count']
+
+        else:
+    
+            for i in self.full_data['medium-list'][0]['track-list']:
+                self.disc_info['tracks'][i['number']] = i['recording']['title']
+
+        return self.disc_info
+
