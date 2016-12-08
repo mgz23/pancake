@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Configuration>
+	<DestinationCodec>/Muzyka/[Artist]/[Year] [Album]/[Codec]/</DestinationCodec>
+	<Codec2Options></Codec2Options>
+	<CdparanoiaLocalisation>/usr/bin/cdparanoia</CdparanoiaLocalisation>
+	<CdparanoiaOptions>-B</CdparanoiaOptions>
+	<Codec>flac</Codec>
+	<DestinationWav>~/Muzyka/[Artist]/[Year] [Album]/WAV/</DestinationWav>
+	<Codec2></Codec2>
+	<CodecLocalisation>/usr/bin/flac</CodecLocalisation>
+	<CodecOptions>-V -8</CodecOptions>
+	<Codec2Localisation></Codec2Localisation>
+</Configuration>
