@@ -16,9 +16,9 @@ class CDTags:
     def read(self):
         self.disc_info['artist'] = self.full_data['artist-credit'][0]['artist']['name']
         if self.disc_info['artist'] == "Various Artists":
-            self.disc_info['artist'] = {}
+            self.disc_info['artists'] = {}
             for i in self.full_data['medium-list'][0]['track-list']:
-                self.disc_info['artist'][i['number']] = i['artist-credit-phrase']
+                self.disc_info['artists'][i['number']] = i['artist-credit-phrase']
         self.disc_info['year'] = self.full_data['date']
         self.disc_info['title'] = self.full_data['title']
         self.disc_info['total_tracks'] = self.full_data['medium-list'][0]['disc-list'][0]['offset-count']
